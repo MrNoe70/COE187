@@ -74,17 +74,37 @@ Creates a "moving dark spot" effect where one LED is off while all others are on
 - **Multi-Port GPIO**: Simultaneous control of LEDs across different ports
 - **Low-Power Design**: CPU sleeps between interrupts
 
-## Code Structure
+## Building and Flashing
 
-### Files
-- `main.c` - System initialization, interrupt handlers, main loop
-- `ledblink.h` - Type definitions and function declarations  
-- `ledblink.c` - LED control functions and pattern definitions
+### Prerequisites
+- Maxim SDK for MAX78000
+- ARM GCC toolchain
+- OpenOCD or other flashing utility
 
-### Key Functions
+### Build Commands 
+make clean
+make TARGET=MAX78000 BOARD=FTHR_RevA
 
-#### Main Application
-```c
-void gpio_isr(void *cbdata)      // Button interrupt handler
-void TMR0_IRQHandler(void)       // Timer interrupt handler  
-int main(void)                   // System initialization
+### Flash to Board
+make flash
+
+## Troubleshooting
+
+### Common Issues
+1. LEDs not lighting: Verify GPIO pin assignments match hardware
+2. Button not responding: Check SW1 connection and pull-up configuration
+3. Multiple mode toggles: Increase debounce delay if switch bouncing occurs
+4. Erratic timing: Verify timer configuration and clock settings
+
+### Debugging
+- Use serial output to verify system state
+- Check interrupt flags in debugger
+- Verify GPIO configurations match hardware
+
+## License
+This project is provided as example code for the MAX78000 FTHR board.
+
+## References
+- MAX78000 Datasheet
+- FTHR Board User Guide
+- Maxim SDK Documentation
