@@ -62,19 +62,6 @@ Your final code:
 
 ---
 
-
-### ASCII art visualization
-
-Provides a grayscale visualization of the captured image.
-
-### Error detection for overflow and timeouts
-
-* Stream timeout
-* FIFO timeout
-* CNN processing timeout
-
----
-
 ## Sample Classification Results
 
 ### Orange Image
