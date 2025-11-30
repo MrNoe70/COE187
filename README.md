@@ -105,6 +105,6 @@ make flash
 This project is provided as example code for the MAX78000 FTHR board.
 
 ## References
-- MAX78000 Datasheet
-- FTHR Board User Guide
-- Maxim SDK Documentation
+- MAX78000FTHR Board Documentation: https://www.analog.com/en/resources/evaluation-hardware-and-software/evaluation-boards-kits/max78000fthr.html
+- MAX78000 Datasheet: https://www.analog.com/media/en/technical-documentation/data-sheets/max78000.pdf
+- MSDK User Guide: https://analogdevicesinc.github.io/msdk/USERGUIDE/
