@@ -16,6 +16,10 @@ typedef struct {
 #define DASH_PATTERN     0xFF   // all on (but held longer by repeated entries)
 #define PAUSE_PATTERN    0x00   // all off
 
+// Declare step variables as extern so main.c can access them
+extern volatile int morse_step;
+extern volatile int shift_step;
+
 void LEDBank_Init(void);
 void LED_Update(void);
 

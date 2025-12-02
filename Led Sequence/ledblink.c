@@ -4,6 +4,9 @@
 
 extern volatile int mode;
 
+volatile int morse_step = 0;
+volatile int shift_step = 0;
+
 const led_pin_t leds[NUM_LEDS] = {
     {MXC_GPIO0, MXC_GPIO_PIN_17},
     {MXC_GPIO0, MXC_GPIO_PIN_16},
@@ -15,27 +18,54 @@ const led_pin_t leds[NUM_LEDS] = {
     {MXC_GPIO2, MXC_GPIO_PIN_3},
 };
 
-// Morse C-O-E pattern (step-by-step)
+// CORRECTED Morse C-O-E pattern
+// Timing: Dot = 1 step (100ms), Dash = 3 steps (300ms)
+// Element gap = 1 step (100ms), Letter gap = 3 steps (300ms)
 static const uint32_t morse_pattern[] = {
-    // C: -.-.
-    DOT_PATTERN, PAUSE_PATTERN,  // Dot
-    DOT_PATTERN, PAUSE_PATTERN,  // Dot  
-    DOT_PATTERN, PAUSE_PATTERN,  // Dot (simplified for timing)
-    DOT_PATTERN, PAUSE_PATTERN,  // Dot
-
-    // O: ---
-    DOT_PATTERN, DOT_PATTERN, DOT_PATTERN,  // Dash (repeated dots)
-    PAUSE_PATTERN,
+    // C: -.-. (dash-dot-dash-dot)
+    // Dash (-): 300ms
+    DOT_PATTERN, DOT_PATTERN, DOT_PATTERN,  // Dash part 1/3
+    PAUSE_PATTERN,                          // Element gap
+    
+    // Dot (.): 100ms  
+    DOT_PATTERN,                            // Dot
+    PAUSE_PATTERN,                          // Element gap
+    
+    // Dash (-): 300ms
+    DOT_PATTERN, DOT_PATTERN, DOT_PATTERN,  // Dash part 1/3
+    PAUSE_PATTERN,                          // Element gap
+    
+    // Dot (.): 100ms
+    DOT_PATTERN,                            // Dot
+    PAUSE_PATTERN,                          // Element gap
+    
+    // Letter gap between C and O (300ms)
+    PAUSE_PATTERN, PAUSE_PATTERN, PAUSE_PATTERN,
+    
+    // O: --- (dash-dash-dash)
+    // First dash
     DOT_PATTERN, DOT_PATTERN, DOT_PATTERN,  // Dash
-    PAUSE_PATTERN,
+    PAUSE_PATTERN,                          // Element gap
+    
+    // Second dash  
     DOT_PATTERN, DOT_PATTERN, DOT_PATTERN,  // Dash
+    PAUSE_PATTERN,                          // Element gap
+    
+    // Third dash
+    DOT_PATTERN, DOT_PATTERN, DOT_PATTERN,  // Dash
+    PAUSE_PATTERN,                          // Element gap
+    
+    // Letter gap between O and E (300ms)
+    PAUSE_PATTERN, PAUSE_PATTERN, PAUSE_PATTERN,
+    
+    // E: . (dot)
+    DOT_PATTERN,                            // Dot
+    PAUSE_PATTERN,                          // Element gap
+    
+    // Word gap (700ms = 7 steps)
+    PAUSE_PATTERN, PAUSE_PATTERN, PAUSE_PATTERN,
+    PAUSE_PATTERN, PAUSE_PATTERN, PAUSE_PATTERN,
     PAUSE_PATTERN,
-
-    // E: .
-    DOT_PATTERN, PAUSE_PATTERN,
-
-    // Word gap
-    PAUSE_PATTERN, PAUSE_PATTERN, PAUSE_PATTERN
 };
 
 static const int morse_len = sizeof(morse_pattern) / sizeof(morse_pattern[0]);
@@ -53,9 +83,6 @@ static const uint32_t shift_pattern[] = {
 };
 
 static const int shift_len = 8;
-
-static volatile int morse_step = 0;
-static volatile int shift_step = 0;
 
 static void set_leds(uint32_t pattern)
 {
@@ -83,6 +110,8 @@ void LEDBank_Init(void)
     }
 
     printf("LED Bank Initialized\n");
+    printf("Morse pattern length: %d steps\n", morse_len);
+    printf("Shift pattern length: %d steps\n", shift_len);
 }
 
 void LED_Update(void)
